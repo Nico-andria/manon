@@ -1,0 +1,8 @@
+// Minimal schema: no business model yet (added by the architect agent).
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
