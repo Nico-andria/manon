@@ -1,0 +1,88 @@
+{
+  "macros": {
+    "GIT_READ": "git (status|diff|log|show|blame|rev-parse|branch --show-current|branch --list|branch -a|branch -vv)( [\\w./@~^:=-]+)*",
+    "CHECKS": "npm (run )?(test|lint|typecheck|build)( -- [\\w./=:@ -]+)?|npx (vitest|tsc|eslint|playwright)( [\\w./=:@-]+)*",
+    "GIT_COMMIT": "git add (-A|\\.|[\\w][\\w./-]*)( [\\w][\\w./-]*)*|git commit -m (\"[^\"]+\"|'[^']+')"
+  },
+
+  "orchestrateur": {
+    "write": ["^docs/STATUS\\.md$"]
+  },
+
+  "architecte": {
+    "write": ["^docs/", "^prisma/schema\\.prisma$"]
+  },
+
+  "designer": {
+    "write": ["^design/", "^docs/design/"]
+  },
+
+  "planificateur-tests": {
+    "write": ["^docs/tests/"]
+  },
+
+  "testeur": {
+    "write": [
+      "^tests/",
+      "^e2e/",
+      "^vitest\\.config\\.[mc]?[tj]s$",
+      "^playwright\\.config\\.[mc]?[tj]s$",
+      "\\.(test|spec)\\.[tj]sx?$"
+    ],
+    "bash": ["^(${CHECKS}|${GIT_READ})$"]
+  },
+
+  "backend": {
+    "write": [
+      "^src/app/api/",
+      "^src/server/",
+      "^src/lib/",
+      "^src/emails/",
+      "^src/middleware\\.[tj]s$",
+      "^prisma/migrations/",
+      "^prisma/seed\\.[tj]s$",
+      "^scripts/"
+    ],
+    "bash": [
+      "^(${CHECKS}|${GIT_READ}|${GIT_COMMIT})$",
+      "^npx prisma (generate|validate|format|migrate (dev|status|diff)|db seed)( [\\w./=:@-]+)*$",
+      "^npm (ci|install|i|add)( -D)?( [@\\w./-]+)*$"
+    ]
+  },
+
+  "frontend": {
+    "write": [
+      "^src/app/(?!api/)",
+      "^src/components/",
+      "^src/hooks/",
+      "^src/styles/",
+      "^public/",
+      "^tailwind\\.config\\.[mc]?[tj]s$"
+    ],
+    "bash": [
+      "^(${CHECKS}|${GIT_READ}|${GIT_COMMIT})$",
+      "^npm run dev$",
+      "^npm (ci|install|i|add)( -D)?( [@\\w./-]+)*$"
+    ]
+  },
+
+  "securite": {
+    "write": ["^docs/security/"],
+    "bash": ["^(${GIT_READ}|npm audit( --[\\w=-]+)*)$"]
+  },
+
+  "reviewer": {
+    "write": ["^docs/reviews/"],
+    "bash": ["^(${GIT_READ}|${CHECKS})$"]
+  },
+
+  "merger": {
+    "bash": [
+      "^(${GIT_READ}|${CHECKS}|${GIT_COMMIT})$",
+      "^git (switch|checkout)( -c| -b)? [\\w][\\w./-]*$",
+      "^git merge( --no-ff)? [\\w][\\w./-]*$",
+      "^git push( -u)? origin (?!main$|master$)[\\w][\\w./-]*$",
+      "^gh pr (create|view|checks|status|diff)( .*)?$"
+    ]
+  }
+}
